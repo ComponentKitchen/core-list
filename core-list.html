@@ -1265,8 +1265,14 @@ the following abstract API:
       index = Math.min(index, this._virtualCount-1);
       index = Math.max(index, 0);
       this.changeStartIndex(index - this._virtualStart);
-      this._scrollTop = this.setScrollTop(this._aboveSize + (index / this._rowFactor) * this._physicalAverage);
-      this._physicalOffset = this._scrollTop - this._aboveSize;
+      if (index < this._rowFactor) {
+        // Scrolling to item in top row scrolls all the way to the top.
+        this._scrollTop = this.setScrollTop(0);
+        this._physicalOffset = 0;
+      } else {
+        this._scrollTop = this.setScrollTop(this._aboveSize + (index / this._rowFactor) * this._physicalAverage);
+        this._physicalOffset = this._scrollTop - this._aboveSize;
+      }
       this._dir = 0;
     },
 
